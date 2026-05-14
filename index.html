@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR"><!-- v03:03:53 -->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -502,8 +502,8 @@ footer{background:#080f2a;color:rgba(255,255,255,.45);padding:40px 24px 24px;tex
           <div><h3 style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;margin-bottom:4px;">Conhecimentos de Gestão Estratégica</h3><p style="font-size:13px;color:rgba(255,255,255,.8);">11 perguntas · DRE, SWOT, ICP, KPI, cenários · Gabarito explicado + como a Inova Strategy ajuda em cada tema</p></div>
         </div>
         <div class="form-row" style="margin-bottom:14px;">
-          <div class="form-group"><label>Seu nome *</label><input type="text" id="c-nome" placeholder="Seu nome"></div>
-          <div class="form-group"><label>Empresa *</label><input type="text" id="c-empresa" placeholder="Nome da empresa"></div>
+          <div class="form-group"><label>Seu nome *</label><input type="text" id="p-nome" placeholder="Seu nome"></div>
+          <div class="form-group"><label>Empresa *</label><input type="text" id="p-empresa" placeholder="Nome da empresa"></div>
         </div>
         <button class="btn-gold" style="width:100%;padding:13px;font-size:15px;font-family:'Syne',sans-serif;font-weight:800;" onclick="iniciarConhec()">🧠 Iniciar Teste de Conhecimentos</button>
       </div>
@@ -569,19 +569,9 @@ footer{background:#080f2a;color:rgba(255,255,255,.45);padding:40px 24px 24px;tex
     <h2 class="sec-title">Vamos conversar sobre sua estratégia?</h2>
     <p class="sec-sub">Nossa equipe retorna em até 24h para confirmar visita comercial ou palestra gratuita.</p>
     <div style="display:flex;gap:36px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:280px;">
-        <div class="form-group"><label>Nome completo *</label><input type="text" id="c-nome" placeholder="Seu nome"></div>
-        <div class="form-row">
-          <div class="form-group"><label>E-mail *</label><input type="email" id="c-email" placeholder="seu@email.com"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Empresa *</label><input type="text" id="c-empresa" placeholder="Nome da empresa"></div>
-          <div class="form-group"><label>Setor</label><select id="c-setor"><option>Selecione</option><option>Varejo</option><option>SaaS</option><option>Saúde</option><option>Educação/IES</option><option>Empresa Familiar</option><option>Outro</option></select></div>
-        </div>
-        <div class="form-group"><label>O que você precisa?</label><select id="c-servico"><option>Selecione</option><option>Visita comercial gratuita</option><option>Palestra gratuita</option><option>GSI Completa</option><option>Parceria Contínua</option><option>Formação de Gestores</option></select></div>
-        <div class="form-group"><label>Mensagem</label><textarea id="c-mensagem" placeholder="Conte sobre sua empresa..."></textarea></div>
-        <button class="btn-gold" id="btn-contato" style="width:100%;padding:14px;font-size:15px;font-family:'Syne',sans-serif;font-weight:800;" onclick="enviarContato()">🚀 Enviar mensagem</button>
-        <p id="msg-contato" style="text-align:center;font-size:13px;margin-top:8px;display:none;"></p>
+      <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:16px;justify-content:center;">
+        <button class="btn-gold" onclick="openModal('contato')" style="padding:16px;font-size:16px;font-family:'Syne',sans-serif;font-weight:800;border:none;cursor:pointer;">🚀 Enviar mensagem</button>
+        <p style="font-size:13px;color:var(--muted);text-align:center;">Clique para preencher e enviar sua mensagem</p>
       </div>
       <div style="flex:0 0 200px;padding-top:8px;">
         <div style="display:flex;flex-direction:column;gap:16px;">
@@ -635,26 +625,23 @@ function enviarModal(){
   const empresa=document.getElementById('m-empresa')?.value||'';
   const servico=document.getElementById('m-servico')?.value||'';
   const msgEl=document.getElementById('msg-modal');
-  if(!nome||!email||!empresa){alert('Preencha nome, e-mail e empresa.');return;}
+  
   const btn=document.querySelector('#modal-contato .btn-navy-sm');
   btn.textContent='Enviando...'; btn.disabled=true;
   fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({access_key:W3F_KEY,subject:'Solicitação de Proposta — Inova Strategy',name:nome,email:email,empresa:empresa,servico:servico})}).then(r=>r.json()).then(d=>{if(d.success){msgEl.style.display='block';msgEl.style.color='green';msgEl.textContent='✅ Mensagem enviada! Retornamos em até 24h.';btn.textContent='Enviado ✓';setTimeout(()=>{closeModal('contato');btn.textContent='🚀 Enviar';btn.disabled=false;msgEl.style.display='none';},3000);}else{msgEl.style.display='block';msgEl.style.color='red';msgEl.textContent='❌ Erro. Tente: casartellialam@gmail.com';btn.textContent='🚀 Enviar';btn.disabled=false;}}).catch(()=>{msgEl.style.display='block';msgEl.style.color='red';msgEl.textContent='❌ Erro. Tente: casartellialam@gmail.com';btn.textContent='🚀 Enviar';btn.disabled=false;});
 }
 
-function showGrat(id,tab){document.querySelectorAll('.grat-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.grat-tab').forEach(t=>t.classList.remove('active'));document.getElementById('gp-'+id).classList.add('active');if(tab)tab.classList.add('active');}
 function enviarContato(){
-  const nome=document.getElementById('c-nome')?.value||'';
-  const email=document.getElementById('c-email')?.value||'';
-  const empresa=document.getElementById('c-empresa')?.value||'';
-  const setor=document.getElementById('c-setor')?.value||'';
-  const servico=document.getElementById('c-servico')?.value||'';
-  const mensagem=document.getElementById('c-mensagem')?.value||'';
-  const msgEl=document.getElementById('msg-contato');
-  const btn=document.getElementById('btn-contato');
-  if(!nome||!email||!empresa){alert('Preencha nome, e-mail e empresa.');return;}
-  btn.textContent='Enviando...'; btn.disabled=true;
-  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({access_key:W3F_KEY,subject:'Contato via site — Inova Strategy',name:nome,email:email,empresa:empresa,setor:setor,servico:servico,message:mensagem})}).then(r=>r.json()).then(d=>{if(d.success){msgEl.style.display='block';msgEl.style.color='green';msgEl.textContent='✅ Mensagem enviada! Retornamos em até 24h.';btn.textContent='Enviado ✓';}else{msgEl.style.display='block';msgEl.style.color='red';msgEl.textContent='❌ Erro. Tente: casartellialam@gmail.com';btn.textContent='🚀 Enviar mensagem';btn.disabled=false;}}).catch(()=>{msgEl.style.display='block';msgEl.style.color='red';msgEl.textContent='❌ Erro. Tente: casartellialam@gmail.com';btn.textContent='🚀 Enviar mensagem';btn.disabled=false;});
+  var n=document.querySelector('#contato input[type=text]');
+  var e=document.querySelector('#contato input[type=email]');
+  var msg=document.querySelector('#contato textarea');
+  var btn=document.getElementById('btn-contato');
+  var msgEl=document.getElementById('msg-contato');
+  btn.textContent='Enviando...';btn.disabled=true;
+  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({access_key:'b673329d-61e1-4127-a867-368d310ac19e',subject:'Contato — Inova Strategy',name:n?n.value:'',email:e?e.value:'',message:msg?msg.value:''})}).then(r=>r.json()).then(d=>{if(d.success){msgEl.style.display='block';msgEl.style.color='green';msgEl.textContent='✅ Mensagem enviada!';btn.textContent='Enviado ✓';}else{msgEl.style.display='block';msgEl.style.color='red';msgEl.textContent='❌ Erro. Email: casartellialam@gmail.com';btn.textContent='🚀 Enviar mensagem';btn.disabled=false;}}).catch(()=>{msgEl.style.display='block';msgEl.style.color='red';msgEl.textContent='❌ Erro. Email: casartellialam@gmail.com';btn.textContent='🚀 Enviar mensagem';btn.disabled=false;});
 }
+function showGrat(id,tab){document.querySelectorAll('.grat-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.grat-tab').forEach(t=>t.classList.remove('active'));document.getElementById('gp-'+id).classList.add('active');if(tab)tab.classList.add('active');}
+
 const cQs=[
   {m:"Módulo 01 — Resumo Executivo",q:"O que deve constar obrigatoriamente em um Resumo Executivo estratégico?",opts:["Visão geral do negócio, posicionamento, mercado e síntese estratégica","Apenas o histórico da empresa e fundadores","Lista detalhada de produtos e preços","Organograma completo e quadro societário"],correct:0,exp:"O Resumo Executivo é o mapa do negócio — deve sintetizar posicionamento, mercado-alvo, diferenciais competitivos e a estratégia central em uma visão única e coesa. É o primeiro documento que investidores e gestores leem.",contrib:"A Inova Strategy estrutura o Resumo Executivo na Etapa 1 como base de toda a análise estratégica — garantindo um ponto de partida sólido e compartilhado."},
   {m:"Módulo 02 — Missão e Visão",q:"Qual é a diferença fundamental entre Missão e Visão?",opts:["São a mesma coisa com nomenclaturas diferentes","Visão é operacional e interna; Missão é voltada ao mercado","Missão é o que a empresa faz hoje; Visão é onde quer chegar no futuro","Missão é de curto prazo; Visão é de médio prazo"],correct:2,exp:"Missão define o propósito atual da empresa — por que ela existe e o que faz. Visão define o futuro desejado — onde a empresa quer estar em 5 a 10 anos. São a bússola e o destino da estratégia.",contrib:"Na Etapa 5 da GSI, Missão e Visão são revisadas com os próprios gestores — garantindo alinhamento real entre liderança e estratégia."},
@@ -683,7 +670,7 @@ const pQs=[
   {m:"Módulo 11 — Avaliação e Ajustes",q:"Existe um ritual formal de revisão estratégica mensal ou trimestral com os gestores?",opts:[{t:"Sim, ritual definido e praticado",pts:2},{t:"Revisamos eventualmente",pts:1},{t:"Não revisamos formalmente",pts:0}],contrib:"O diferencial da GSI: rituais de revisão mensais, KPIs monitorados no Dashboard e novos prompts — o plano nunca para."},
 ];
 let pCur=0,pScores=[];
-function iniciarPraticas(){const n=document.getElementById('p-nome').value,e=document.getElementById('p-empresa').value;if(!n||!e){alert('Preencha seu nome e empresa.');return;}document.getElementById('p-intro').style.display='none';document.getElementById('p-q-wrap').style.display='block';renderPQ();}
+function iniciarPraticas(){const n=document.getElementById('p-nome').value,e=document.getElementById('p-empresa').value;if(!n||!e){console.log('ok';return;}document.getElementById('p-intro').style.display='none';document.getElementById('p-q-wrap').style.display='block';renderPQ();}
 function renderPQ(){const q=pQs[pCur],pct=Math.round(pCur/pQs.length*100);document.getElementById('p-meta').textContent='Pergunta '+(pCur+1)+' de '+pQs.length;document.getElementById('p-pct').textContent=pct+'%';document.getElementById('p-fill').style.width=pct+'%';document.getElementById('p-modulo').textContent=q.m;document.getElementById('p-texto').textContent=q.q;document.getElementById('p-opts').innerHTML=q.opts.map((o,i)=>'<button class="q-opt" onclick="selectPQ('+i+')">'+o.t+'</button>').join('');}
 function selectPQ(i){pScores.push(pQs[pCur].opts[i].pts);pCur++;if(pCur>=pQs.length)mostrarPResult();else renderPQ();}
 
@@ -726,7 +713,7 @@ function mostrarPResult(){
   }
 }
 
-function iniciarConhec(){const n=document.getElementById('c-nome').value,e=document.getElementById('c-empresa').value;if(!n||!e){alert('Preencha seu nome e empresa.');return;}document.getElementById('c-intro').style.display='none';document.getElementById('c-q-wrap').style.display='block';renderCQ();}
+function iniciarConhec(){const n=document.getElementById('c-nome').value,e=document.getElementById('c-empresa').value;if(!n||!e){console.log('ok';return;}document.getElementById('c-intro').style.display='none';document.getElementById('c-q-wrap').style.display='block';renderCQ();}
 function renderCQ(){const q=cQs[cCur],pct=Math.round(cCur/cQs.length*100);document.getElementById('c-meta').textContent='Pergunta '+(cCur+1)+' de '+cQs.length;document.getElementById('c-score').textContent=cAc+' acerto'+(cAc!==1?'s':'');document.getElementById('c-fill').style.width=pct+'%';document.getElementById('c-modulo').textContent=q.m;document.getElementById('c-texto').textContent=q.q;document.getElementById('c-exp').style.display='none';document.getElementById('c-feedback').textContent='';document.getElementById('c-next').classList.remove('vis');document.getElementById('c-opts').innerHTML=q.opts.map((o,i)=>'<button class="q-opt" onclick="respC('+i+')" id="co-'+i+'">'+o+'</button>').join('');}
 function respC(i){const q=cQs[cCur];document.querySelectorAll('.q-opt').forEach(b=>b.disabled=true);const ok=i===q.correct;if(ok)cAc++;document.getElementById('co-'+i).classList.add(ok?'correct':'wrong');if(!ok)document.getElementById('co-'+q.correct).classList.add('correct');const exp=document.getElementById('c-exp');exp.style.display='block';exp.innerHTML='<strong>'+(ok?'✅ Correto!':'❌ Incorreto.')+' </strong>'+q.exp+'<br><br><span style="color:var(--gold);font-weight:600;">💡 Como a Inova Strategy ajuda:</span> '+q.contrib;const fb=document.getElementById('c-feedback');fb.textContent=ok?'✅ Acertou!':'❌ Errou';fb.className='q-feedback '+(ok?'ok':'er');document.getElementById('c-next').classList.add('vis');cResp.push({m:q.m,ok});}
 function proximaC(){cCur++;if(cCur>=cQs.length)mostrarCResult();else renderCQ();}
@@ -748,6 +735,16 @@ function mostrarCResult(){
   }
 }
 
+</script>
+
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if(target) target.scrollIntoView({behavior: 'smooth'});
+  });
+});
 </script>
 </body>
 </html>
